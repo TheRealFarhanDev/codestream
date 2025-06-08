@@ -127,6 +127,41 @@ class __CalcState extends State<_Calc> {
     )
   ]);
 }`,
+  Lab6: `import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+main() => runApp(MaterialApp(home: Weather()));
+
+class Weather extends StatefulWidget {
+  createState() => _Weather();
+}
+
+class _Weather extends State<Weather> {
+  var city = TextEditingController(), info = "Enter city", temp = "";
+
+  fetch() async {
+    var res = await http.get(Uri.parse(
+        "https://api.openweathermap.org/data/2.5/weather?q=\${city.text}&appid=f170617f038a0fb58ea2713ec7bc4ed1&units=metric"));
+    var data = jsonDecode(res.body);
+    setState(() => {
+          info = data["weather"][0]["description"],
+          temp = "\${data["main"]["temp"]}°C"
+        });
+  }
+
+  build(context) => Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(controller: city),
+            ElevatedButton(onPressed: fetch, child: Text("Get Weather")),
+            Text(temp, style: TextStyle(fontSize: 30)),
+            Text(info),
+          ],
+        ),
+      );
+}`,
 
   Lab7: `import 'package:flutter/material.dart';
 import 'dart:async';
